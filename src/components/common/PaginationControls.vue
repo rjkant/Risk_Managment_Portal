@@ -145,4 +145,27 @@ function visiblePages(): (number | null)[] {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }
+
+/* ---- Mobile: <= 860px ---- */
+@media (max-width: 860px) {
+  .pagination {
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .pagination__controls {
+    justify-content: center;
+  }
+}
+
+/* ---- Compact: <= 480px ---- */
+@media (max-width: 480px) {
+  .pagination__btn {
+    min-width: 28px;
+    height: 28px;
+    font-size: var(--font-size-xs);
+  }
+}
 </style>
