@@ -4,14 +4,20 @@ import { useFilters } from '@/composables/useFilters'
 import { useSorting } from '@/composables/useSorting'
 import RiskTable from '@/components/table/RiskTable.vue'
 import FilterPanel from '@/components/filters/FilterPanel.vue'
+import ActiveFiltersBar from '@/components/common/ActiveFiltersBar.vue'
+import EmptyState from '@/components/common/EmptyState.vue'
 
 const { risks } = useRisks()
 const {
   filters,
+  activeFilters,
   filteredRisks,
+  hasActiveFilters,
   toggleSeverity,
   toggleStatus,
   toggleOwner,
+  removeFilter,
+  clearAll,
 } = useFilters(risks)
 const { sortColumn, sortDirection, sortedRisks, toggleSort } = useSorting(filteredRisks)
 </script>
@@ -32,11 +38,21 @@ const { sortColumn, sortDirection, sortedRisks, toggleSort } = useSorting(filter
         @toggle-owner="toggleOwner"
       />
       <main class="app__main">
+        <ActiveFiltersBar
+          :filters="activeFilters"
+          @remove="removeFilter"
+          @clear-all="clearAll"
+        />
         <RiskTable
+          v-if="sortedRisks.length > 0"
           :risks="sortedRisks"
           :sort-column="sortColumn"
           :sort-direction="sortDirection"
           @sort="toggleSort"
+        />
+        <EmptyState
+          v-else-if="hasActiveFilters"
+          @clear-filters="clearAll"
         />
       </main>
     </div>
