@@ -9,7 +9,7 @@ import ActiveFiltersBar from '@/components/common/ActiveFiltersBar.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
 import PaginationControls from '@/components/common/PaginationControls.vue'
 
-const { risks } = useRisks()
+const { risks, updateRiskStatus } = useRisks()
 const {
   filters,
   activeFilters,
@@ -64,6 +64,7 @@ const {
           :sort-column="sortColumn"
           :sort-direction="sortDirection"
           @sort="toggleSort"
+          @update-status="updateRiskStatus"
         />
         <EmptyState
           v-else-if="hasActiveFilters"
@@ -122,5 +123,16 @@ const {
 
 .app__main {
   min-width: 0;
+}
+
+/* Responsive: stack filter panel on narrow viewports */
+@media (max-width: 860px) {
+  .app {
+    padding: var(--space-4);
+  }
+
+  .app__layout {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

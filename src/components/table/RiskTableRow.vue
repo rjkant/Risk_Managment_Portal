@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import type { Risk } from '@/types/risk'
-import { capitalise, formatCurrency, formatRelativeTime } from '@/utils/format'
+import type { Risk, Status } from '@/types/risk'
+import { formatCurrency, formatRelativeTime } from '@/utils/format'
 import SeverityChip from '@/components/common/SeverityChip.vue'
 import OwnerAvatar from '@/components/common/OwnerAvatar.vue'
+import StatusEditor from '@/components/common/StatusEditor.vue'
 
 defineProps<{
   risk: Risk
+}>()
+
+const emit = defineEmits<{
+  updateStatus: [riskId: string, newStatus: Status]
 }>()
 </script>
 
@@ -19,7 +24,11 @@ defineProps<{
       <SeverityChip :severity="risk.severity" />
     </td>
     <td class="risk-row__cell">
-      {{ capitalise(risk.status) }}
+      <StatusEditor
+        :status="risk.status"
+        :risk-id="risk.id"
+        @update="(id, status) => emit('updateStatus', id, status)"
+      />
     </td>
     <td class="risk-row__cell">
       <OwnerAvatar :owner-id="risk.ownerId" />
@@ -39,6 +48,23 @@ defineProps<{
 <style scoped>
 .risk-row {
   border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.15s ease;
+}
+
+.risk-row:hover {
+  background-color: var(--color-surface-sunken);
+}
+
+.risk-row:nth-child(even) {
+  background-color: rgba(246, 247, 249, 0.5);
+}
+
+.risk-row:nth-child(even):hover {
+  background-color: var(--color-surface-sunken);
+}
+
+.risk-row:last-child {
+  border-bottom: none;
 }
 
 .risk-row__cell {
@@ -51,6 +77,7 @@ defineProps<{
 .risk-row__cell--id {
   color: var(--color-text-muted);
   font-size: var(--font-size-xs);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
   white-space: nowrap;
 }
 
@@ -59,6 +86,7 @@ defineProps<{
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-weight: var(--font-weight-medium);
 }
 
 .risk-row__cell--number {
@@ -70,5 +98,6 @@ defineProps<{
 .risk-row__cell--updated {
   color: var(--color-text-muted);
   white-space: nowrap;
+  font-size: var(--font-size-xs);
 }
 </style>
