@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
+  base: '/Risk_Managment_Portal/',
   plugins: [vue()],
   resolve: {
     alias: {
