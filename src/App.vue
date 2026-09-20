@@ -2,10 +2,12 @@
 import { useRisks } from '@/composables/useRisks'
 import { useFilters } from '@/composables/useFilters'
 import { useSorting } from '@/composables/useSorting'
+import { usePagination } from '@/composables/usePagination'
 import RiskTable from '@/components/table/RiskTable.vue'
 import FilterPanel from '@/components/filters/FilterPanel.vue'
 import ActiveFiltersBar from '@/components/common/ActiveFiltersBar.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
+import PaginationControls from '@/components/common/PaginationControls.vue'
 
 const { risks } = useRisks()
 const {
@@ -20,6 +22,19 @@ const {
   clearAll,
 } = useFilters(risks)
 const { sortColumn, sortDirection, sortedRisks, toggleSort } = useSorting(filteredRisks)
+const {
+  currentPage,
+  totalPages,
+  paginatedItems,
+  totalItems,
+  startIndex,
+  endIndex,
+  isFirstPage,
+  isLastPage,
+  goToPage,
+  nextPage,
+  prevPage,
+} = usePagination(sortedRisks, { pageSize: 5 })
 </script>
 
 <template>
@@ -45,7 +60,7 @@ const { sortColumn, sortDirection, sortedRisks, toggleSort } = useSorting(filter
         />
         <RiskTable
           v-if="sortedRisks.length > 0"
-          :risks="sortedRisks"
+          :risks="paginatedItems"
           :sort-column="sortColumn"
           :sort-direction="sortDirection"
           @sort="toggleSort"
@@ -53,6 +68,19 @@ const { sortColumn, sortDirection, sortedRisks, toggleSort } = useSorting(filter
         <EmptyState
           v-else-if="hasActiveFilters"
           @clear-filters="clearAll"
+        />
+        <PaginationControls
+          v-if="totalItems > 0"
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          :start-index="startIndex"
+          :end-index="endIndex"
+          :total-items="totalItems"
+          :is-first-page="isFirstPage"
+          :is-last-page="isLastPage"
+          @go-to-page="goToPage"
+          @next="nextPage"
+          @prev="prevPage"
         />
       </main>
     </div>
