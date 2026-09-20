@@ -2,6 +2,7 @@
 import type { Severity, Status } from '@/types/risk'
 import { getAllOwners } from '@/data/owners'
 import CheckboxGroup from './CheckboxGroup.vue'
+import DropdownFilter from './DropdownFilter.vue'
 
 defineProps<{
   selectedSeverities: Set<Severity>
@@ -53,7 +54,7 @@ const ownerOptions = getAllOwners().map((o) => ({
       @toggle="emit('toggleStatus', $event as Status)"
     />
 
-    <CheckboxGroup
+    <DropdownFilter
       label="Owner"
       :options="ownerOptions"
       :selected="selectedOwners"
@@ -75,5 +76,12 @@ const ownerOptions = getAllOwners().map((o) => ({
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-semibold);
   margin: 0 0 var(--space-5);
+}
+
+/* On mobile the drawer header provides the title, so hide the panel one */
+@media (max-width: 860px) {
+  .filter-panel__title {
+    display: none;
+  }
 }
 </style>
