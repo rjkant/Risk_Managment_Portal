@@ -1,30 +1,10 @@
 <script setup lang="ts">
 import { useRisks } from '@/composables/useRisks'
-import type { SortColumn, SortDirection } from '@/types/risk'
-import { ref } from 'vue'
+import { useSorting } from '@/composables/useSorting'
 import RiskTable from '@/components/table/RiskTable.vue'
 
 const { risks } = useRisks()
-
-const sortColumn = ref<SortColumn | null>(null)
-const sortDirection = ref<SortDirection>('none')
-
-function handleSort(column: SortColumn) {
-  if (sortColumn.value === column) {
-    const cycle: Record<SortDirection, SortDirection> = {
-      none: 'asc',
-      asc: 'desc',
-      desc: 'none',
-    }
-    sortDirection.value = cycle[sortDirection.value]
-    if (sortDirection.value === 'none') {
-      sortColumn.value = null
-    }
-  } else {
-    sortColumn.value = column
-    sortDirection.value = 'asc'
-  }
-}
+const { sortColumn, sortDirection, sortedRisks, toggleSort } = useSorting(risks)
 </script>
 
 <template>
@@ -35,10 +15,10 @@ function handleSort(column: SortColumn) {
     </header>
     <main class="app__content">
       <RiskTable
-        :risks="risks"
+        :risks="sortedRisks"
         :sort-column="sortColumn"
         :sort-direction="sortDirection"
-        @sort="handleSort"
+        @sort="toggleSort"
       />
     </main>
   </div>
