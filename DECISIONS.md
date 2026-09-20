@@ -8,8 +8,11 @@
 - Active filter chips above the table with clear-all
 - Pagination (5 per page) with page numbers and "Showing X–Y of Z"
 - Inline status editing — click the status to get a dropdown
+- Owner filter as a multi-select dropdown (matches the spec's "multi-select dropdown" requirement)
 - Empty state when filters match nothing
-- Basic responsive layout (sidebar stacks below 860px)
+- Responsive layout — sidebar filter panel on desktop, slide-in drawer on mobile/tablet
+- URL query param sync — filter, sort, and page state survives refresh (replaceState, no history spam)
+- Dark mode with system preference detection and localStorage toggle
 
 ## What I cut and why
 
@@ -18,8 +21,6 @@
 **10k row virtualisation** — with 12 sample rows there's nothing to demonstrate. In production I'd reach for `vue-virtual-scroller` — it drops into the existing table structure without changing the composables. Flagged this in the "what I'd add" section below.
 
 **Loading skeletons** — since we're importing JSON directly there's no async loading to skeleton over. In a real app with `fetch()` I'd add a `loading` ref in `useRisks` and render skeleton rows while it's true.
-
-**Owner dropdown in filters** — the spec says "multi-select dropdown" but with only 4 mock owners, checkboxes felt more honest. A proper dropdown would need a search input and virtual scrolling for a real user list.
 
 ## API issues I'd raise with backend
 
@@ -49,5 +50,3 @@ The `risks.json` response has a few things that would trip up a production front
 - Virtual scrolling for 10k+ rows
 - Vitest unit tests for the composables (they're pure functions, easy to test)
 - Playwright e2e for the filter→sort→paginate flow
-- URL query param sync so filter state survives page refresh
-- Dark mode (the token layer is already set up for it)

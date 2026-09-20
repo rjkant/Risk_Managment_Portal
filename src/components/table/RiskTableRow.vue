@@ -56,7 +56,7 @@ const emit = defineEmits<{
 }
 
 .risk-row:nth-child(even) {
-  background-color: rgba(246, 247, 249, 0.5);
+  background-color: var(--color-surface-sunken);
 }
 
 .risk-row:nth-child(even):hover {
