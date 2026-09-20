@@ -1,10 +1,19 @@
 <script setup lang="ts">
 import { useRisks } from '@/composables/useRisks'
+import { useFilters } from '@/composables/useFilters'
 import { useSorting } from '@/composables/useSorting'
 import RiskTable from '@/components/table/RiskTable.vue'
+import FilterPanel from '@/components/filters/FilterPanel.vue'
 
 const { risks } = useRisks()
-const { sortColumn, sortDirection, sortedRisks, toggleSort } = useSorting(risks)
+const {
+  filters,
+  filteredRisks,
+  toggleSeverity,
+  toggleStatus,
+  toggleOwner,
+} = useFilters(risks)
+const { sortColumn, sortDirection, sortedRisks, toggleSort } = useSorting(filteredRisks)
 </script>
 
 <template>
@@ -13,14 +22,24 @@ const { sortColumn, sortDirection, sortedRisks, toggleSort } = useSorting(risks)
       <h1 class="app__title">Risk Register</h1>
       <p class="app__subtitle">Programme PRG-4417</p>
     </header>
-    <main class="app__content">
-      <RiskTable
-        :risks="sortedRisks"
-        :sort-column="sortColumn"
-        :sort-direction="sortDirection"
-        @sort="toggleSort"
+    <div class="app__layout">
+      <FilterPanel
+        :selected-severities="filters.severity"
+        :selected-statuses="filters.status"
+        :selected-owners="filters.owners"
+        @toggle-severity="toggleSeverity"
+        @toggle-status="toggleStatus"
+        @toggle-owner="toggleOwner"
       />
-    </main>
+      <main class="app__main">
+        <RiskTable
+          :risks="sortedRisks"
+          :sort-column="sortColumn"
+          :sort-direction="sortDirection"
+          @sort="toggleSort"
+        />
+      </main>
+    </div>
   </div>
 </template>
 
@@ -50,7 +69,14 @@ const { sortColumn, sortDirection, sortedRisks, toggleSort } = useSorting(risks)
   margin: var(--space-1) 0 0;
 }
 
-.app__content {
-  max-width: 1400px;
+.app__layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.app__main {
+  min-width: 0;
 }
 </style>
